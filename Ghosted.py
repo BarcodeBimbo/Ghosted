@@ -8,13 +8,12 @@ from io import BytesIO
 import threading, signal, requests, asyncio, sys, discord, json, os
 
 def get_json_path():
-    if getattr(sys, 'frozen', False):
-      
-        return os.path.join(sys._MEIPASS, 'ghosted.json')
-    else:
-        
-        return 'ghosted.json'
+    if getattr(sys, "frozen", False):
 
+        return os.path.join(sys._MEIPASS, "ghosted.json")
+    else:
+
+        return "ghosted.json"
 
 def load_config():
     try:
@@ -31,8 +30,12 @@ def save_config(token):
         with open("ghosted.json", "w") as outfile:
             json.dump(config, outfile, indent=4)
 
-
-MrReact = commands.Bot(command_prefix="!", self_bot=True, help_command=None, status=discord.Status.do_not_disturb)
+MrReact = commands.Bot(
+    command_prefix="!",
+    self_bot=True,
+    help_command=None,
+    status=discord.Status.do_not_disturb,
+)
 
 async def join_voice(guid, vcid):
     try:
@@ -47,15 +50,23 @@ async def join_voice(guid, vcid):
 class ModernButton(tk.Button):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
-        self.config(relief="flat", borderwidth=0, padx=20, pady=8, font=("Helvetica", 10), cursor="hand2")
+        self.config(
+            relief="flat",
+            borderwidth=0,
+            padx=20,
+            pady=8,
+            font=("Helvetica", 10),
+            cursor="hand2",
+        )
         self.bind("<Enter>", self.on_enter)
         self.bind("<Leave>", self.on_leave)
 
     def on_enter(self, e):
-        self['background'] = '#5865f2'
+        self["background"] = "#5865f2"
 
     def on_leave(self, e):
-        self['background'] = '#4752c4'
+        self["background"] = "#4752c4"
+
 
 class ModernEntry(tk.Frame):
     def __init__(self, master, width=None, **kwargs):
@@ -74,7 +85,7 @@ class ModernEntry(tk.Frame):
             insertbackground="#dcddde",
             font=("Helvetica", 10),
             relief="flat",
-            **kwargs
+            **kwargs,
         )
         self.entry.pack(expand=True, fill="both")
         self.entry.bind("<FocusIn>", self.on_focus_in)
@@ -104,7 +115,6 @@ class App:
         self.root.resizable(False, False)
         self.root.overrideredirect(True)
 
-        # Create event loop
         self.loop = asyncio.new_event_loop()
         self.thread = None
         self.is_closing = False
@@ -114,7 +124,6 @@ class App:
         self.main_container.pack(fill="both", expand=True, padx=20, pady=20)
         self.setup_icon_and_welcome()
         self.setup_tabs()
-
 
         signal.signal(signal.SIGINT, self.signal_handler)
         signal.signal(signal.SIGTERM, self.signal_handler)
@@ -126,13 +135,31 @@ class App:
         self.title_bar.bind("<Button-1>", self.start_move)
         self.title_bar.bind("<ButtonRelease-1>", self.stop_move)
         self.title_bar.bind("<B1-Motion>", self.do_move)
-        self.title_label = tk.Label(self.title_bar, text="Ghosted", font=("Helvetica", 10), fg="#dcddde", bg="#202225")
+        self.title_label = tk.Label(
+            self.title_bar,
+            text="Ghosted",
+            font=("Helvetica", 10),
+            fg="#dcddde",
+            bg="#202225",
+        )
         self.title_label.pack(side="left", padx=10)
-        self.close_button = tk.Label(self.title_bar, text="×", font=("Helvetica", 14), fg="#dcddde", bg="#202225", cursor="hand2", width=3)
+        self.close_button = tk.Label(
+            self.title_bar,
+            text="×",
+            font=("Helvetica", 14),
+            fg="#dcddde",
+            bg="#202225",
+            cursor="hand2",
+            width=3,
+        )
         self.close_button.pack(side="right")
         self.close_button.bind("<Button-1>", self.on_closing)
-        self.close_button.bind("<Enter>", lambda e: self.close_button.config(bg="#ed4245"))
-        self.close_button.bind("<Leave>", lambda e: self.close_button.config(bg="#202225"))
+        self.close_button.bind(
+            "<Enter>", lambda e: self.close_button.config(bg="#ed4245")
+        )
+        self.close_button.bind(
+            "<Leave>", lambda e: self.close_button.config(bg="#202225")
+        )
 
     def signal_handler(self, signum, frame):
         self.on_closing()
@@ -143,9 +170,7 @@ class App:
 
         self.is_closing = True
 
-
         self.disable_all_widgets()
-
 
         if self.loop and self.loop.is_running():
             asyncio.run_coroutine_threadsafe(self.cleanup(), self.loop)
@@ -168,10 +193,8 @@ class App:
         if self.loop and self.loop.is_running():
             self.loop.stop()
 
-
         if self.thread and self.thread.is_alive():
             self.thread.join(timeout=1)
-
 
         self.root.destroy()
         sys.exit(0)
@@ -180,31 +203,50 @@ class App:
 
         for widget in self.root.winfo_children():
             if isinstance(widget, (tk.Button, tk.Entry)):
-                widget.configure(state='disabled')
+                widget.configure(state="disabled")
 
     def setup_icon_and_welcome(self):
         response = requests.get("https://tlo.sh/imgs/tlo-t.png")
         image_data = Image.open(BytesIO(response.content))
         image_data = image_data.resize((100, 100), Image.LANCZOS)
         self.icon_image = ImageTk.PhotoImage(image_data)
-        self.icon_label = tk.Label(self.main_container, image=self.icon_image, bg="#36393f")
+        self.icon_label = tk.Label(
+            self.main_container, image=self.icon_image, bg="#36393f"
+        )
         self.icon_label.pack(pady=3)
-        self.welcome_label = tk.Label(self.main_container, text="Welcome, ...", font=("Helvetica", 12), bg="#36393f", fg="#dcddde")
+        self.welcome_label = tk.Label(
+            self.main_container,
+            text="Welcome, ...",
+            font=("Helvetica", 12),
+            bg="#36393f",
+            fg="#dcddde",
+        )
         self.welcome_label.pack(pady=6)
 
     def setup_tabs(self):
 
         self.style = ttk.Style()
-        self.style.theme_use('default')
+        self.style.theme_use("default")
         self.style.configure("TNotebook", background="#36393f", borderwidth=0)
-        self.style.configure("TNotebook.Tab", background="#282b30", foreground="#dcddde", padding=[5, 2])
-        self.style.map("TNotebook.Tab", background=[["selected", "#36393f"]], foreground=[["selected", "#ffffff"]])
+        self.style.configure(
+            "TNotebook.Tab", background="#282b30", foreground="#dcddde", padding=[5, 2]
+        )
+        self.style.map(
+            "TNotebook.Tab",
+            background=[["selected", "#36393f"]],
+            foreground=[["selected", "#ffffff"]],
+        )
 
         self.notebook = ttk.Notebook(self.main_container)
         self.notebook.pack(fill="both", expand=True)
 
-        self.footer_label = tk.Label(self.main_container, text="© 2023-2025 Sanction ™ | All rights reserved.", 
-                                   font=("Helvetica", 8), bg="#36393f", fg="#72767d")
+        self.footer_label = tk.Label(
+            self.main_container,
+            text="© 2023-2025 Sanction ™ | All rights reserved.",
+            font=("Helvetica", 8),
+            bg="#36393f",
+            fg="#72767d",
+        )
         self.footer_label.pack(side="bottom", pady=2)
 
         self.create_authorize_tab()
@@ -214,11 +256,24 @@ class App:
         self.authorize_frame = tk.Frame(self.notebook, bg="#36393f")
         self.notebook.add(self.authorize_frame, text="Authorize")
 
-        tk.Label(self.authorize_frame, text="Enter Token", font=("Helvetica", 12), bg="#36393f", fg="#dcddde").pack(pady=3)
+        tk.Label(
+            self.authorize_frame,
+            text="Enter Token",
+            font=("Helvetica", 12),
+            bg="#36393f",
+            fg="#dcddde",
+        ).pack(pady=3)
         self.token_entry = ModernEntry(self.authorize_frame, width=30, show="•")
         self.token_entry.pack(pady=3)
 
-        ModernButton(self.authorize_frame, text="Login", bg="#4752c4", fg="white", width=20, command=self.login_bot).pack(pady=3)
+        ModernButton(
+            self.authorize_frame,
+            text="Login",
+            bg="#4752c4",
+            fg="white",
+            width=20,
+            command=self.login_bot,
+        ).pack(pady=3)
 
     def create_home_tab(self):
         self.home_frame = tk.Frame(self.notebook, bg="#36393f")
@@ -229,20 +284,43 @@ class App:
 
         server_frame = tk.Frame(input_frame, bg="#36393f")
         server_frame.pack(fill="x", pady=5)
-        tk.Label(server_frame, text="Server ID:", font=("Helvetica", 12), bg="#36393f", fg="#dcddde", width=10, anchor="w").pack(side="left", padx=5)
+        tk.Label(
+            server_frame,
+            text="Server ID:",
+            font=("Helvetica", 12),
+            bg="#36393f",
+            fg="#dcddde",
+            width=10,
+            anchor="w",
+        ).pack(side="left", padx=5)
         self.server_entry = ModernEntry(server_frame, width=20)
         self.server_entry.pack(side="left", padx=5, fill="x", expand=True)
 
         channel_frame = tk.Frame(input_frame, bg="#36393f")
         channel_frame.pack(fill="x", pady=5)
-        tk.Label(channel_frame, text="Channel ID:", font=("Helvetica", 12), bg="#36393f", fg="#dcddde", width=10, anchor="w").pack(side="left", padx=5)
+        tk.Label(
+            channel_frame,
+            text="Channel ID:",
+            font=("Helvetica", 12),
+            bg="#36393f",
+            fg="#dcddde",
+            width=10,
+            anchor="w",
+        ).pack(side="left", padx=5)
         self.channel_entry = ModernEntry(channel_frame, width=20)
         self.channel_entry.pack(side="left", padx=5, fill="x", expand=True)
 
-        ModernButton(self.home_frame, text="Join", bg="#4752c4", fg="white", width=20, command=self.join_voice_channel).pack(pady=3)
+        ModernButton(
+            self.home_frame,
+            text="Join",
+            bg="#4752c4",
+            fg="white",
+            width=20,
+            command=self.join_voice_channel,
+        ).pack(pady=3)
 
     def run_bot(self):
-        
+
         asyncio.set_event_loop(self.loop)
         try:
             self.loop.run_forever()
@@ -258,7 +336,6 @@ class App:
             return
 
         save_config(token)
-
 
         if self.thread is None or not self.thread.is_alive():
             self.thread = threading.Thread(target=self.run_bot, daemon=True)
@@ -312,7 +389,7 @@ class App:
         x = self.root.winfo_x() - self.x + event.x
         y = self.root.winfo_y() - self.y + event.y
         self.root.geometry(f"+{x}+{y}")
-
+        
 if __name__ == "__main__":
     root = tk.Tk()
     app = App(root)
