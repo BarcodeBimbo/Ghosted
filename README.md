@@ -16,7 +16,12 @@
 
 # Ghosted
 
-Ghosted is a user-friendly GUI application to join calls without actually being in the call.
+Ghosted is a user-friendly GUI self-bot discord application to join calls without actually being in the call.
+
+### Preview:
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/08e646e1-ed41-4a96-b417-933c52305d71.mp4"></video>
+</div>
 
 ## Features
 
