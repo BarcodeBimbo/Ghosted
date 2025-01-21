@@ -109,4 +109,4 @@ This project is for educational purposes. Using self-bots on Discord is against 
 ## Contact
 
 - **Author**: Joshua
-- **Email**: admin@t.lo.sh
+- **Email**: admin@tlo.sh
